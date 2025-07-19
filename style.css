@@ -1,0 +1,22 @@
+body {
+  margin: 0;
+  font-family: 'Serif';
+  background: #fdf6f0;
+}
+
+#main-scene {
+  position: relative;
+}
+
+#main-bg {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.hotspot {
+  position: absolute;
+  cursor: pointer;
+  border: 2px dashed rgba(0,0,0,0.2);
+  background-color: rgba(255,255,255,0.1);
+}
