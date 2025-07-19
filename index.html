@@ -22,10 +22,10 @@
     /* Responsive container keeping 16:9 aspect ratio */
     #shop-wrapper {
       position: relative;
-      width: 90vw;            /* responsive width, 90% of viewport width */
-      max-width: 960px;       /* max width limit */
+      width: 90vw;
+      max-width: 960px;
       margin: 40px auto;
-      padding-top: 56.25%;    /* 1080 / 1920 = 0.5625 -> 56.25% for 16:9 aspect ratio */
+      padding-top: 56.25%; /* 16:9 aspect ratio */
       background: #fff;
       border-radius: 12px;
       box-shadow: 0 0 20px rgba(0,0,0,0.1);
@@ -74,6 +74,64 @@
       z-index: 1000;
       user-select: none;
     }
+
+    /* Modal overlay styles */
+    #modal-overlay {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0,0,0,0.5);
+      display: none; /* hidden initially */
+      justify-content: center;
+      align-items: center;
+      z-index: 2000;
+      user-select: none;
+    }
+
+    /* Modal content box */
+    #modal-content {
+      position: relative;
+      background: #fff;
+      border-radius: 12px;
+      max-width: 700px;
+      width: 90vw;
+      box-shadow: 0 0 30px rgba(0,0,0,0.3);
+      overflow: hidden;
+      aspect-ratio: 16 / 9; /* maintain same aspect ratio */
+    }
+
+    #modal-content img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      user-select: none;
+      pointer-events: none;
+      display: block;
+    }
+
+    /* Close button */
+    #modal-close {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      background: rgba(255,255,255,0.85);
+      border: none;
+      border-radius: 50%;
+      width: 32px;
+      height: 32px;
+      font-size: 22px;
+      line-height: 32px;
+      text-align: center;
+      cursor: pointer;
+      font-weight: bold;
+      color: #555;
+      transition: background-color 0.3s ease;
+      user-select: none;
+    }
+
+    #modal-close:hover {
+      background: #eee;
+    }
+
   </style>
 </head>
 <body>
@@ -89,12 +147,24 @@
 
   <div id="tooltip">shelves</div>
 
+  <!-- Modal overlay for zoomed shelf -->
+  <div id="modal-overlay" aria-hidden="true">
+    <div id="modal-content" role="dialog" aria-modal="true" aria-label="Zoomed Shelf View">
+      <button id="modal-close" aria-label="Close zoomed shelf view">&times;</button>
+      <img
+        src="https://raw.githubusercontent.com/denofdreamers/CozyTrinkets/refs/heads/main/assets/TrinketShopShelf_Empty.jpg"
+        alt="Zoomed shelf"
+      />
+    </div>
+  </div>
+
   <script>
     const hotspot = document.getElementById('shelf-hotspot');
     const shopImage = document.getElementById('shop-image');
     const tooltip = document.getElementById('tooltip');
+    const modalOverlay = document.getElementById('modal-overlay');
+    const modalClose = document.getElementById('modal-close');
 
-    // Original hotspot coords relative to 1920x1080 image
     const originalCoords = {
       top: 330,
       left: 498,
@@ -102,6 +172,7 @@
       height: 170
     };
 
+    // Update hotspot position on load & resize
     function updateHotspotPosition() {
       const rect = shopImage.getBoundingClientRect();
       const scaleX = rect.width / 1920;
@@ -116,6 +187,7 @@
     window.addEventListener('load', updateHotspotPosition);
     window.addEventListener('resize', updateHotspotPosition);
 
+    // Tooltip handlers
     hotspot.addEventListener('mouseenter', () => {
       tooltip.style.opacity = 1;
     });
@@ -131,14 +203,35 @@
       tooltip.style.top = `${e.clientY + offsetY}px`;
     });
 
+    // Open modal on hotspot click
     hotspot.addEventListener('click', () => {
-      alert('Shelf hotspot clicked! (navigate to shelf view)');
-      // Here you can add your logic to open the zoomed shelf scene
-      // e.g., window.location.href = 'shelf.html';
+      modalOverlay.style.display = 'flex';
+      modalOverlay.setAttribute('aria-hidden', 'false');
+    });
+
+    // Close modal on close button click
+    modalClose.addEventListener('click', () => {
+      modalOverlay.style.display = 'none';
+      modalOverlay.setAttribute('aria-hidden', 'true');
+    });
+
+    // Optional: close modal when clicking outside modal content
+    modalOverlay.addEventListener('click', e => {
+      if (e.target === modalOverlay) {
+        modalClose.click();
+      }
+    });
+
+    // Optional: close modal on ESC key
+    window.addEventListener('keydown', e => {
+      if (e.key === 'Escape' && modalOverlay.style.display === 'flex') {
+        modalClose.click();
+      }
     });
   </script>
 
 </body>
 </html>
+
 
 
