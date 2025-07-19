@@ -1,205 +1,212 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Cozy Trinkets Shop</title>
-  <style>
-    body {
-      margin: 0;
-      font-family: system-ui, sans-serif;
-      background: #f0f0f0;
-      display: flex;
-      justify-content: center;
-      padding: 20px;
-    }
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Cozy Trinkets Shop</title>
+<style>
+  body {
+    margin: 0;
+    font-family: system-ui, sans-serif;
+    background: #f0f0f0;
+    display: flex;
+    justify-content: center;
+    align-items: start;
+    min-height: 100vh;
+    padding: 20px;
+  }
 
-    #shop-container {
-      position: relative;
-      width: 1366px;
-      height: 768px;
-      background: #fff;
-      box-shadow: 0 0 12px rgba(0,0,0,0.15);
-      user-select: none;
-    }
+  #shop-container {
+    position: relative;
+    width: 100%;
+    max-width: 1366px;
+    aspect-ratio: 1366 / 768;
+    background: #fff;
+    box-shadow: 0 0 12px rgba(0,0,0,0.15);
+    user-select: none;
+  }
 
-    #shop-image {
-      width: 1366px;
-      height: 768px;
-      display: block;
-      pointer-events: none; /* So clicks pass through */
-    }
+  #shop-image {
+    width: 100%;
+    height: 100%;
+    display: block;
+    pointer-events: none;
+  }
 
-    .hotspot {
-      position: absolute;
-      left: 354px;
-      top: 235px;
-      width: 366px;
-      height: 121px;
-      cursor: pointer;
-      background-color: rgba(255, 255, 255, 0); /* fully transparent */
-      /* Subtle glow on hover */
-      transition: box-shadow 0.3s ease;
-      border-radius: 8px;
-    }
+  .hotspot {
+    position: absolute;
+    left: 354px;
+    top: 235px;
+    width: 366px;
+    height: 121px;
+    cursor: pointer;
+    background-color: rgba(255 255 255 / 0.05); /* very subtle visible */
+    border-radius: 8px;
+    transition: box-shadow 0.3s ease, background-color 0.3s ease;
+    outline-offset: 2px;
+  }
 
-    .hotspot:hover {
-      box-shadow: 0 0 12px 3px rgba(255, 255, 180, 0.6);
-    }
+  .hotspot:hover, .hotspot:focus {
+    box-shadow: 0 0 15px 5px rgba(255 255 180 / 0.8);
+    background-color: rgba(255 255 255 / 0.15);
+    outline: none;
+  }
 
-    /* Tooltip styling */
-    #tooltip {
-      position: fixed;
-      padding: 6px 10px;
-      background: rgba(50, 50, 50, 0.9);
-      color: white;
-      font-size: 14px;
-      border-radius: 4px;
-      pointer-events: none;
-      opacity: 0;
-      transition: opacity 0.2s ease;
-      z-index: 1000;
-      user-select: none;
-      white-space: nowrap;
-    }
+  /* Tooltip styling */
+  #tooltip {
+    position: fixed;
+    padding: 6px 10px;
+    background: rgba(50, 50, 50, 0.9);
+    color: white;
+    font-size: 14px;
+    border-radius: 4px;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+    z-index: 1000;
+    user-select: none;
+    white-space: nowrap;
+  }
 
-    /* Modal overlay */
-    #modal-overlay {
-      position: fixed;
-      inset: 0;
-      background: rgba(0,0,0,0.6);
-      display: none;
-      justify-content: center;
-      align-items: center;
-      z-index: 2000;
-    }
+  /* Modal overlay */
+  #modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.6);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 2000;
+    opacity: 0;
+    transition: opacity 0.25s ease;
+  }
+  #modal-overlay.show {
+    display: flex;
+    opacity: 1;
+  }
 
-    #modal-content {
-      position: relative;
-      background: white;
-      border-radius: 8px;
-      max-width: 90vw;
-      max-height: 90vh;
-      padding: 10px;
-      box-shadow: 0 0 20px rgba(0,0,0,0.3);
-    }
+  #modal-content {
+    position: relative;
+    background: white;
+    border-radius: 8px;
+    max-width: 90vw;
+    max-height: 90vh;
+    padding: 10px;
+    box-shadow: 0 0 20px rgba(0,0,0,0.3);
+  }
 
-    #modal-content img {
-      display: block;
-      max-width: 100%;
-      max-height: 80vh;
-      border-radius: 6px;
-    }
+  #modal-content img {
+    display: block;
+    max-width: 100%;
+    max-height: 80vh;
+    border-radius: 6px;
+  }
 
-    #modal-close {
-      position: absolute;
-      top: 8px;
-      right: 8px;
-      background: #eee;
-      border: none;
-      font-size: 20px;
-      cursor: pointer;
-      border-radius: 50%;
-      width: 30px;
-      height: 30px;
-      line-height: 30px;
-      text-align: center;
-      padding: 0;
-      user-select: none;
-      transition: background-color 0.2s ease;
-    }
+  #modal-close {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    background: #eee;
+    border: none;
+    font-size: 20px;
+    cursor: pointer;
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    line-height: 30px;
+    text-align: center;
+    padding: 0;
+    user-select: none;
+    transition: background-color 0.2s ease;
+  }
 
-    #modal-close:hover {
-      background: #ccc;
-    }
-  </style>
+  #modal-close:hover {
+    background: #ccc;
+  }
+</style>
 </head>
 <body>
 
-  <div id="shop-container" role="main" aria-label="Cozy Trinkets Shop Interior">
+<div id="shop-container" role="main" aria-label="Cozy Trinkets Shop Interior">
+  <img 
+    id="shop-image" 
+    src="https://raw.githubusercontent.com/denofdreamers/CozyTrinkets/refs/heads/main/assets/ShopInterior_Empty.jpg" 
+    alt="Cozy trinket shop interior" 
+    draggable="false"
+  />
+
+  <div class="hotspot" id="shelf-hotspot" tabindex="0" aria-describedby="tooltip" aria-label="Shelves - click to decorate"></div>
+</div>
+
+<div id="tooltip" role="tooltip" aria-hidden="true">Shelves</div>
+
+<div id="modal-overlay" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+  <div id="modal-content">
+    <button id="modal-close" aria-label="Close modal">&times;</button>
     <img 
-      id="shop-image" 
-      src="https://raw.githubusercontent.com/denofdreamers/CozyTrinkets/refs/heads/main/assets/ShopInterior_Empty.jpg" 
-      alt="Cozy trinket shop interior" 
+      src="https://raw.githubusercontent.com/denofdreamers/CozyTrinkets/refs/heads/main/assets/ShopShelf_Empty.jpg" 
+      alt="Zoomed in shelf for decoration" 
       draggable="false"
     />
-
-    <div class="hotspot" id="shelf-hotspot" tabindex="0" aria-describedby="tooltip" aria-label="Shelves - click to decorate"></div>
   </div>
+</div>
 
-  <div id="tooltip" role="tooltip" aria-hidden="true">Shelves</div>
+<script>
+  const hotspot = document.getElementById('shelf-hotspot');
+  const tooltip = document.getElementById('tooltip');
+  const modalOverlay = document.getElementById('modal-overlay');
+  const modalClose = document.getElementById('modal-close');
 
-  <div id="modal-overlay" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="modal-title">
-    <div id="modal-content">
-      <button id="modal-close" aria-label="Close modal">&times;</button>
-      <img 
-        src="https://raw.githubusercontent.com/denofdreamers/CozyTrinkets/refs/heads/main/assets/ShopShelf_Empty.jpg" 
-        alt="Zoomed in shelf for decoration" 
-        draggable="false"
-      />
-    </div>
-  </div>
+  hotspot.addEventListener('mouseenter', () => {
+    tooltip.style.opacity = '1';
+    tooltip.setAttribute('aria-hidden', 'false');
+  });
 
-  <script>
-    const hotspot = document.getElementById('shelf-hotspot');
-    const tooltip = document.getElementById('tooltip');
-    const modalOverlay = document.getElementById('modal-overlay');
-    const modalClose = document.getElementById('modal-close');
+  hotspot.addEventListener('mouseleave', () => {
+    tooltip.style.opacity = '0';
+    tooltip.setAttribute('aria-hidden', 'true');
+  });
 
-    // Tooltip positioning with small offset
-    hotspot.addEventListener('mouseenter', () => {
-      tooltip.style.opacity = '1';
-      tooltip.setAttribute('aria-hidden', 'false');
-    });
+  hotspot.addEventListener('mousemove', e => {
+    const offsetX = 15;
+    const offsetY = 15;
+    tooltip.style.left = `${e.clientX + offsetX}px`;
+    tooltip.style.top = `${e.clientY + offsetY}px`;
+  });
 
-    hotspot.addEventListener('mouseleave', () => {
-      tooltip.style.opacity = '0';
-      tooltip.setAttribute('aria-hidden', 'true');
-    });
+  function openModal() {
+    modalOverlay.classList.add('show');
+    modalOverlay.setAttribute('aria-hidden', 'false');
+    modalClose.focus();
+  }
 
-    hotspot.addEventListener('mousemove', e => {
-      const offsetX = 15;
-      const offsetY = 15;
-      tooltip.style.left = `${e.clientX + offsetX}px`;
-      tooltip.style.top = `${e.clientY + offsetY}px`;
-    });
-
-    // Open modal on click or keyboard (Enter/Space)
-    function openModal() {
-      modalOverlay.style.display = 'flex';
-      modalOverlay.setAttribute('aria-hidden', 'false');
-      modalClose.focus();
+  hotspot.addEventListener('click', openModal);
+  hotspot.addEventListener('keydown', e => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      openModal();
     }
+  });
 
-    hotspot.addEventListener('click', openModal);
-    hotspot.addEventListener('keydown', e => {
-      if (e.key === 'Enter' || e.key === ' ') {
-        e.preventDefault();
-        openModal();
-      }
-    });
+  modalClose.addEventListener('click', () => {
+    modalOverlay.classList.remove('show');
+    modalOverlay.setAttribute('aria-hidden', 'true');
+    hotspot.focus();
+  });
 
-    // Close modal on close button click
-    modalClose.addEventListener('click', () => {
-      modalOverlay.style.display = 'none';
-      modalOverlay.setAttribute('aria-hidden', 'true');
-      hotspot.focus();
-    });
+  modalOverlay.addEventListener('click', e => {
+    if (e.target === modalOverlay) {
+      modalClose.click();
+    }
+  });
 
-    // Close modal when clicking outside modal content
-    modalOverlay.addEventListener('click', e => {
-      if (e.target === modalOverlay) {
-        modalClose.click();
-      }
-    });
+  window.addEventListener('keydown', e => {
+    if (e.key === 'Escape' && modalOverlay.classList.contains('show')) {
+      modalClose.click();
+    }
+  });
+</script>
 
-    // Close modal on ESC key
-    window.addEventListener('keydown', e => {
-      if (e.key === 'Escape' && modalOverlay.style.display === 'flex') {
-        modalClose.click();
-      }
-    });
-  </script>
-  
 </body>
 </html>
+
