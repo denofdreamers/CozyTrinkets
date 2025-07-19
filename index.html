@@ -9,7 +9,7 @@
       margin: 0;
       display: flex;
       justify-content: center;
-      align-items: flex-start;
+      align-items: center; /* vertically center */
       background: #f7f3ee;
       height: 100vh;
       overflow: hidden;
@@ -22,7 +22,8 @@
       max-width: 1366px;
       aspect-ratio: 1366 / 768;
       background-image: url('https://raw.githubusercontent.com/denofdreamers/CozyTrinkets/refs/heads/main/assets/ShopInterior_Empty.jpg');
-      background-size: cover;
+      background-size: contain; /* show full image, no crop */
+      background-repeat: no-repeat;
       background-position: center;
       border-radius: 10px;
       box-shadow: 0 6px 20px rgba(0,0,0,0.2);
@@ -30,18 +31,14 @@
       user-select: none;
     }
 
-.hotspot {
-  position: absolute;
-  left: 26.8%;  /* 366 / 1366 */
-  top: 15.8%;   /* 121 / 768 */
-  width: 25.9%; /* 354 / 1366 */
-  height: 30.6%; /* 235 / 768 */
-  cursor: pointer;
-  background-color: rgba(255 255 255 / 0.05);
-  border-radius: 8px;
-  transition: box-shadow 0.3s ease, background-color 0.3s ease;
-  outline-offset: 2px;
-}
+    .hotspot {
+      position: absolute;
+      cursor: pointer;
+      background-color: rgba(255 255 255 / 0.05);
+      border-radius: 8px;
+      transition: box-shadow 0.3s ease, background-color 0.3s ease;
+      outline-offset: 2px;
+    }
 
     .hotspot:hover {
       box-shadow: 0 0 12px 4px rgba(255, 223, 150, 0.8);
@@ -76,7 +73,8 @@
       max-width: 700px;
       aspect-ratio: 1366 / 768;
       background-image: url('https://raw.githubusercontent.com/denofdreamers/CozyTrinkets/refs/heads/main/assets/ShopShelf_Empty.jpg');
-      background-size: cover;
+      background-size: contain;
+      background-repeat: no-repeat;
       background-position: center;
       border-radius: 12px;
       box-shadow: 0 8px 25px rgba(0,0,0,0.3);
@@ -131,7 +129,34 @@
   const zoomedShelf = document.getElementById('zoomed-shelf-container');
   const closeShelf = document.getElementById('close-shelf');
 
-  // Tooltip follow mouse
+  // Base image size for scaling
+  const baseWidth = 1366;
+  const baseHeight = 768;
+
+  // Hotspot position and size in base image pixels
+  const baseHotspot = {
+    x: 366,
+    y: 121,
+    width: 354,
+    height: 235
+  };
+
+  // Update hotspot position & size based on container size
+  function updateHotspot() {
+    const rect = backgroundContainer.getBoundingClientRect();
+    const scaleX = rect.width / baseWidth;
+    const scaleY = rect.height / baseHeight;
+
+    hotspot.style.left = `${baseHotspot.x * scaleX}px`;
+    hotspot.style.top = `${baseHotspot.y * scaleY}px`;
+    hotspot.style.width = `${baseHotspot.width * scaleX}px`;
+    hotspot.style.height = `${baseHotspot.height * scaleY}px`;
+  }
+
+  window.addEventListener('resize', updateHotspot);
+  window.addEventListener('load', updateHotspot);
+
+  // Tooltip follow mouse on hotspot
   hotspot.addEventListener('mousemove', e => {
     tooltip.style.opacity = '1';
     const offset = 15;
@@ -165,7 +190,6 @@
       zoomedShelf.style.display = 'none';
     }
   });
-
 </script>
 
 </body>
