@@ -3,256 +3,203 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Cozy Trinkets - Shop</title>
+  <title>Cozy Trinkets Shop</title>
   <style>
-    /* Global Reset & Box Sizing */
-    *, *::before, *::after {
-      box-sizing: border-box;
-    }
-
-    body, html {
+    body {
       margin: 0;
-      padding: 0;
-      height: 100%;
-      background: #f2f0eb;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      user-select: none;
+      font-family: system-ui, sans-serif;
+      background: #f0f0f0;
+      display: flex;
+      justify-content: center;
+      padding: 20px;
     }
 
-    /* Responsive container keeping 16:9 aspect ratio */
-    #shop-wrapper {
+    #shop-container {
       position: relative;
-      width: 90vw;
-      max-width: 960px;
-      margin: 40px auto;
-      padding-top: 56.25%; /* 16:9 aspect ratio */
+      width: 1366px;
+      height: 768px;
       background: #fff;
-      border-radius: 12px;
-      box-shadow: 0 0 20px rgba(0,0,0,0.1);
-      overflow: visible;
-    }
-
-    /* Background image fills the container absolutely */
-    #shop-image {
-      position: absolute;
-      top: 0; left: 0;
-      width: 100%;
-      height: 100%;
-      object-fit: contain;
-      pointer-events: none;
+      box-shadow: 0 0 12px rgba(0,0,0,0.15);
       user-select: none;
-      border-radius: 12px;
     }
 
-    /* Hotspot styling */
-    #shelf-hotspot {
+    #shop-image {
+      width: 1366px;
+      height: 768px;
+      display: block;
+      pointer-events: none; /* So clicks pass through */
+    }
+
+    .hotspot {
       position: absolute;
+      left: 354px;
+      top: 235px;
+      width: 366px;
+      height: 121px;
       cursor: pointer;
-      background-color: rgba(255, 255, 255, 0);
-      border-radius: 8px;
+      background-color: rgba(255, 255, 255, 0); /* fully transparent */
+      /* Subtle glow on hover */
       transition: box-shadow 0.3s ease;
-      z-index: 10;
+      border-radius: 8px;
     }
 
-    #shelf-hotspot:hover {
-      box-shadow: 0 0 12px 3px rgba(255, 255, 255, 0.6);
+    .hotspot:hover {
+      box-shadow: 0 0 12px 3px rgba(255, 255, 180, 0.6);
     }
 
     /* Tooltip styling */
     #tooltip {
       position: fixed;
-      pointer-events: none;
-      padding: 4px 8px;
-      background: rgba(255 255 255 / 0.9);
-      color: #555;
-      font-weight: 600;
-      border-radius: 4px;
+      padding: 6px 10px;
+      background: rgba(50, 50, 50, 0.9);
+      color: white;
       font-size: 14px;
-      box-shadow: 0 0 8px rgba(255, 255, 255, 0.6);
+      border-radius: 4px;
+      pointer-events: none;
       opacity: 0;
       transition: opacity 0.2s ease;
       z-index: 1000;
       user-select: none;
+      white-space: nowrap;
     }
 
-    /* Modal overlay styles */
+    /* Modal overlay */
     #modal-overlay {
       position: fixed;
-      top: 0; left: 0; right: 0; bottom: 0;
-      background: rgba(0,0,0,0.5);
-      display: none; /* hidden initially */
+      inset: 0;
+      background: rgba(0,0,0,0.6);
+      display: none;
       justify-content: center;
       align-items: center;
       z-index: 2000;
-      user-select: none;
     }
 
-    /* Modal content box */
     #modal-content {
       position: relative;
-      background: #fff;
-      border-radius: 12px;
-      max-width: 700px;
-      width: 90vw;
-      box-shadow: 0 0 30px rgba(0,0,0,0.3);
-      overflow: hidden;
-      aspect-ratio: 16 / 9; /* maintain same aspect ratio */
+      background: white;
+      border-radius: 8px;
+      max-width: 90vw;
+      max-height: 90vh;
+      padding: 10px;
+      box-shadow: 0 0 20px rgba(0,0,0,0.3);
     }
 
     #modal-content img {
-      width: 100%;
-      height: 100%;
-      object-fit: contain;
-      user-select: none;
-      pointer-events: none;
       display: block;
+      max-width: 100%;
+      max-height: 80vh;
+      border-radius: 6px;
     }
 
-    /* Close button */
     #modal-close {
       position: absolute;
-      top: 12px;
-      right: 12px;
-      background: rgba(255,255,255,0.85);
+      top: 8px;
+      right: 8px;
+      background: #eee;
       border: none;
-      border-radius: 50%;
-      width: 32px;
-      height: 32px;
-      font-size: 22px;
-      line-height: 32px;
-      text-align: center;
+      font-size: 20px;
       cursor: pointer;
-      font-weight: bold;
-      color: #555;
-      transition: background-color 0.3s ease;
+      border-radius: 50%;
+      width: 30px;
+      height: 30px;
+      line-height: 30px;
+      text-align: center;
+      padding: 0;
       user-select: none;
+      transition: background-color 0.2s ease;
     }
 
     #modal-close:hover {
-      background: #eee;
+      background: #ccc;
     }
-
   </style>
 </head>
 <body>
 
-  <div id="shop-wrapper">
-    <img
-      id="shop-image"
-      src="https://raw.githubusercontent.com/denofdreamers/CozyTrinkets/refs/heads/main/assets/TrinketShopInterior_Empty.jpg"
-      alt="Shop background"
+  <div id="shop-container" role="main" aria-label="Cozy Trinkets Shop Interior">
+    <img 
+      id="shop-image" 
+      src="https://raw.githubusercontent.com/denofdreamers/CozyTrinkets/refs/heads/main/assets/ShopInterior_Empty.jpg" 
+      alt="Cozy trinket shop interior" 
+      draggable="false"
     />
-    <div id="shelf-hotspot"></div>
+
+    <div class="hotspot" id="shelf-hotspot" tabindex="0" aria-describedby="tooltip" aria-label="Shelves - click to decorate"></div>
   </div>
 
-  <div id="tooltip">shelves</div>
+  <div id="tooltip" role="tooltip" aria-hidden="true">Shelves</div>
 
-  <!-- Modal overlay for zoomed shelf -->
-  <div id="modal-overlay" aria-hidden="true">
-    <div id="modal-content" role="dialog" aria-modal="true" aria-label="Zoomed Shelf View">
-      <button id="modal-close" aria-label="Close zoomed shelf view">&times;</button>
-      <img
-        src="https://raw.githubusercontent.com/denofdreamers/CozyTrinkets/refs/heads/main/assets/TrinketShopShelf_Empty.jpg"
-        alt="Zoomed shelf"
+  <div id="modal-overlay" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+    <div id="modal-content">
+      <button id="modal-close" aria-label="Close modal">&times;</button>
+      <img 
+        src="https://raw.githubusercontent.com/denofdreamers/CozyTrinkets/refs/heads/main/assets/ShopShelf_Empty.jpg" 
+        alt="Zoomed in shelf for decoration" 
+        draggable="false"
       />
     </div>
   </div>
 
   <script>
-const hotspot = document.getElementById('shelf-hotspot');
-const shopImage = document.getElementById('shop-image');
-const tooltip = document.getElementById('tooltip');
-const modalOverlay = document.getElementById('modal-overlay');
-const modalClose = document.getElementById('modal-close');
+    const hotspot = document.getElementById('shelf-hotspot');
+    const tooltip = document.getElementById('tooltip');
+    const modalOverlay = document.getElementById('modal-overlay');
+    const modalClose = document.getElementById('modal-close');
 
-const originalCoords = {
-  top: 330,
-  left: 498,
-  width: 515,
-  height: 170
-};
+    // Tooltip positioning with small offset
+    hotspot.addEventListener('mouseenter', () => {
+      tooltip.style.opacity = '1';
+      tooltip.setAttribute('aria-hidden', 'false');
+    });
 
-// Updated function to account for object-fit: contain padding
-function updateHotspotPosition() {
-  const container = shopImage.parentElement;
-  const containerRect = container.getBoundingClientRect();
-  const imageRatio = 1920 / 1080; // original image aspect ratio
-  const containerRatio = containerRect.width / containerRect.height;
+    hotspot.addEventListener('mouseleave', () => {
+      tooltip.style.opacity = '0';
+      tooltip.setAttribute('aria-hidden', 'true');
+    });
 
-  let displayedWidth, displayedHeight, offsetX, offsetY;
+    hotspot.addEventListener('mousemove', e => {
+      const offsetX = 15;
+      const offsetY = 15;
+      tooltip.style.left = `${e.clientX + offsetX}px`;
+      tooltip.style.top = `${e.clientY + offsetY}px`;
+    });
 
-  if (containerRatio > imageRatio) {
-    // Container wider than image, image height fits container height, width letterboxed
-    displayedHeight = containerRect.height;
-    displayedWidth = displayedHeight * imageRatio;
-    offsetX = (containerRect.width - displayedWidth) / 2;
-    offsetY = 0;
-  } else {
-    // Container taller than image, image width fits container width, height letterboxed
-    displayedWidth = containerRect.width;
-    displayedHeight = displayedWidth / imageRatio;
-    offsetX = 0;
-    offsetY = (containerRect.height - displayedHeight) / 2;
-  }
+    // Open modal on click or keyboard (Enter/Space)
+    function openModal() {
+      modalOverlay.style.display = 'flex';
+      modalOverlay.setAttribute('aria-hidden', 'false');
+      modalClose.focus();
+    }
 
-  const scaleX = displayedWidth / 1920;
-  const scaleY = displayedHeight / 1080;
+    hotspot.addEventListener('click', openModal);
+    hotspot.addEventListener('keydown', e => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        openModal();
+      }
+    });
 
-  hotspot.style.width = `${originalCoords.width * scaleX}px`;
-  hotspot.style.height = `${originalCoords.height * scaleY}px`;
-  hotspot.style.left = `${offsetX + originalCoords.left * scaleX}px`;
-  hotspot.style.top = `${offsetY + originalCoords.top * scaleY}px`;
-}
+    // Close modal on close button click
+    modalClose.addEventListener('click', () => {
+      modalOverlay.style.display = 'none';
+      modalOverlay.setAttribute('aria-hidden', 'true');
+      hotspot.focus();
+    });
 
-window.addEventListener('load', updateHotspotPosition);
-window.addEventListener('resize', updateHotspotPosition);
+    // Close modal when clicking outside modal content
+    modalOverlay.addEventListener('click', e => {
+      if (e.target === modalOverlay) {
+        modalClose.click();
+      }
+    });
 
-// Tooltip handlers
-hotspot.addEventListener('mouseenter', () => {
-  tooltip.style.opacity = 1;
-});
-
-hotspot.addEventListener('mouseleave', () => {
-  tooltip.style.opacity = 0;
-});
-
-hotspot.addEventListener('mousemove', e => {
-  const offsetX = 15;
-  const offsetY = 15;
-  tooltip.style.left = `${e.clientX + offsetX}px`;
-  tooltip.style.top = `${e.clientY + offsetY}px`;
-});
-
-// Open modal on hotspot click
-hotspot.addEventListener('click', () => {
-  modalOverlay.style.display = 'flex';
-  modalOverlay.setAttribute('aria-hidden', 'false');
-});
-
-// Close modal on close button click
-modalClose.addEventListener('click', () => {
-  modalOverlay.style.display = 'none';
-  modalOverlay.setAttribute('aria-hidden', 'true');
-});
-
-// Optional: close modal when clicking outside modal content
-modalOverlay.addEventListener('click', e => {
-  if (e.target === modalOverlay) {
-    modalClose.click();
-  }
-});
-
-// Optional: close modal on ESC key
-window.addEventListener('keydown', e => {
-  if (e.key === 'Escape' && modalOverlay.style.display === 'flex') {
-    modalClose.click();
-  }
-});
-
+    // Close modal on ESC key
+    window.addEventListener('keydown', e => {
+      if (e.key === 'Escape' && modalOverlay.style.display === 'flex') {
+        modalClose.click();
+      }
+    });
   </script>
-
+  
 </body>
 </html>
-
-
-
