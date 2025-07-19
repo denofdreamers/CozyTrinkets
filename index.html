@@ -14,24 +14,27 @@
       user-select: none;
     }
 
-    #shop-wrapper {
-      position: relative;
-      width: 100%;
-      max-width: 960px; /* Adjust max width as you like */
-      margin: 40px auto;
-      box-shadow: 0 0 20px rgba(0,0,0,0.1);
-      border-radius: 12px;
-      overflow: hidden;
-      background: #fff;
-    }
+#shop-wrapper {
+  position: relative;
+  width: 100vw;          /* full viewport width */
+  max-width: 1920px;     /* max original image width */
+  height: auto;
+  margin: 40px auto;
+  box-shadow: 0 0 20px rgba(0,0,0,0.1);
+  border-radius: 12px;
+  overflow: hidden;
+  background: #fff;
+}
 
-    #shop-image {
-      width: 100%;
-      height: auto;
-      display: block;
-      pointer-events: none; /* So clicks go to hotspot */
-      user-select: none;
-    }
+#shop-image {
+  width: 100%;
+  height: auto;
+  display: block;
+  pointer-events: none;
+  user-select: none;
+  object-fit: contain;   /* keeps image fully visible */
+}
+
 
     #shelf-hotspot {
       position: absolute;
