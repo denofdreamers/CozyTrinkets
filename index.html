@@ -5,43 +5,52 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Cozy Trinkets - Shop</title>
   <style>
+    /* Global Reset & Box Sizing */
+    *, *::before, *::after {
+      box-sizing: border-box;
+    }
+
     body, html {
-      margin: 0; 
-      padding: 0; 
+      margin: 0;
+      padding: 0;
       height: 100%;
       background: #f2f0eb;
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
       user-select: none;
     }
 
-#shop-wrapper {
-  position: relative;
-  width: 100vw;          /* full viewport width */
-  max-width: 1920px;     /* max original image width */
-  height: auto;
-  margin: 40px auto;
-  box-shadow: 0 0 20px rgba(0,0,0,0.1);
-  border-radius: 12px;
-  overflow: hidden;
-  background: #fff;
-}
+    /* Responsive container keeping 16:9 aspect ratio */
+    #shop-wrapper {
+      position: relative;
+      width: 90vw;            /* responsive width, 90% of viewport width */
+      max-width: 960px;       /* max width limit */
+      margin: 40px auto;
+      padding-top: 56.25%;    /* 1080 / 1920 = 0.5625 -> 56.25% for 16:9 aspect ratio */
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 0 20px rgba(0,0,0,0.1);
+      overflow: visible;
+    }
 
-#shop-image {
-  width: 100%;
-  height: auto;
-  display: block;
-  pointer-events: none;
-  user-select: none;
-  object-fit: contain;   /* keeps image fully visible */
-}
+    /* Background image fills the container absolutely */
+    #shop-image {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      pointer-events: none;
+      user-select: none;
+      border-radius: 12px;
+    }
 
-
+    /* Hotspot styling */
     #shelf-hotspot {
       position: absolute;
       cursor: pointer;
       background-color: rgba(255, 255, 255, 0);
-      transition: box-shadow 0.3s ease;
       border-radius: 8px;
+      transition: box-shadow 0.3s ease;
       z-index: 10;
     }
 
@@ -49,6 +58,7 @@
       box-shadow: 0 0 12px 3px rgba(255, 255, 255, 0.6);
     }
 
+    /* Tooltip styling */
     #tooltip {
       position: fixed;
       pointer-events: none;
@@ -69,7 +79,11 @@
 <body>
 
   <div id="shop-wrapper">
-    <img id="shop-image" src="https://raw.githubusercontent.com/denofdreamers/CozyTrinkets/refs/heads/main/assets/TrinketShopInterior_Empty.jpg" alt="Shop background" />
+    <img
+      id="shop-image"
+      src="https://raw.githubusercontent.com/denofdreamers/CozyTrinkets/refs/heads/main/assets/TrinketShopInterior_Empty.jpg"
+      alt="Shop background"
+    />
     <div id="shelf-hotspot"></div>
   </div>
 
@@ -80,7 +94,7 @@
     const shopImage = document.getElementById('shop-image');
     const tooltip = document.getElementById('tooltip');
 
-    // Original hotspot coordinates relative to the full image size (1920x1080)
+    // Original hotspot coords relative to 1920x1080 image
     const originalCoords = {
       top: 330,
       left: 498,
@@ -118,12 +132,13 @@
     });
 
     hotspot.addEventListener('click', () => {
-      // TODO: Replace with shelf zoom scene navigation
-      alert('Shelf hotspot clicked! (navigate to shelf.html)');
-      // Example: window.location.href = 'shelf.html';
+      alert('Shelf hotspot clicked! (navigate to shelf view)');
+      // Here you can add your logic to open the zoomed shelf scene
+      // e.g., window.location.href = 'shelf.html';
     });
   </script>
 
 </body>
 </html>
+
 
