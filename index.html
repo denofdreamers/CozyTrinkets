@@ -159,75 +159,96 @@
   </div>
 
   <script>
-    const hotspot = document.getElementById('shelf-hotspot');
-    const shopImage = document.getElementById('shop-image');
-    const tooltip = document.getElementById('tooltip');
-    const modalOverlay = document.getElementById('modal-overlay');
-    const modalClose = document.getElementById('modal-close');
+const hotspot = document.getElementById('shelf-hotspot');
+const shopImage = document.getElementById('shop-image');
+const tooltip = document.getElementById('tooltip');
+const modalOverlay = document.getElementById('modal-overlay');
+const modalClose = document.getElementById('modal-close');
 
-    const originalCoords = {
-      top: 330,
-      left: 498,
-      width: 515,
-      height: 170
-    };
+const originalCoords = {
+  top: 330,
+  left: 498,
+  width: 515,
+  height: 170
+};
 
-    // Update hotspot position on load & resize
-    function updateHotspotPosition() {
-      const rect = shopImage.getBoundingClientRect();
-      const scaleX = rect.width / 1920;
-      const scaleY = rect.height / 1080;
+// Updated function to account for object-fit: contain padding
+function updateHotspotPosition() {
+  const container = shopImage.parentElement;
+  const containerRect = container.getBoundingClientRect();
+  const imageRatio = 1920 / 1080; // original image aspect ratio
+  const containerRatio = containerRect.width / containerRect.height;
 
-      hotspot.style.top = `${originalCoords.top * scaleY}px`;
-      hotspot.style.left = `${originalCoords.left * scaleX}px`;
-      hotspot.style.width = `${originalCoords.width * scaleX}px`;
-      hotspot.style.height = `${originalCoords.height * scaleY}px`;
-    }
+  let displayedWidth, displayedHeight, offsetX, offsetY;
 
-    window.addEventListener('load', updateHotspotPosition);
-    window.addEventListener('resize', updateHotspotPosition);
+  if (containerRatio > imageRatio) {
+    // Container wider than image, image height fits container height, width letterboxed
+    displayedHeight = containerRect.height;
+    displayedWidth = displayedHeight * imageRatio;
+    offsetX = (containerRect.width - displayedWidth) / 2;
+    offsetY = 0;
+  } else {
+    // Container taller than image, image width fits container width, height letterboxed
+    displayedWidth = containerRect.width;
+    displayedHeight = displayedWidth / imageRatio;
+    offsetX = 0;
+    offsetY = (containerRect.height - displayedHeight) / 2;
+  }
 
-    // Tooltip handlers
-    hotspot.addEventListener('mouseenter', () => {
-      tooltip.style.opacity = 1;
-    });
+  const scaleX = displayedWidth / 1920;
+  const scaleY = displayedHeight / 1080;
 
-    hotspot.addEventListener('mouseleave', () => {
-      tooltip.style.opacity = 0;
-    });
+  hotspot.style.width = `${originalCoords.width * scaleX}px`;
+  hotspot.style.height = `${originalCoords.height * scaleY}px`;
+  hotspot.style.left = `${offsetX + originalCoords.left * scaleX}px`;
+  hotspot.style.top = `${offsetY + originalCoords.top * scaleY}px`;
+}
 
-    hotspot.addEventListener('mousemove', e => {
-      const offsetX = 15;
-      const offsetY = 15;
-      tooltip.style.left = `${e.clientX + offsetX}px`;
-      tooltip.style.top = `${e.clientY + offsetY}px`;
-    });
+window.addEventListener('load', updateHotspotPosition);
+window.addEventListener('resize', updateHotspotPosition);
 
-    // Open modal on hotspot click
-    hotspot.addEventListener('click', () => {
-      modalOverlay.style.display = 'flex';
-      modalOverlay.setAttribute('aria-hidden', 'false');
-    });
+// Tooltip handlers
+hotspot.addEventListener('mouseenter', () => {
+  tooltip.style.opacity = 1;
+});
 
-    // Close modal on close button click
-    modalClose.addEventListener('click', () => {
-      modalOverlay.style.display = 'none';
-      modalOverlay.setAttribute('aria-hidden', 'true');
-    });
+hotspot.addEventListener('mouseleave', () => {
+  tooltip.style.opacity = 0;
+});
 
-    // Optional: close modal when clicking outside modal content
-    modalOverlay.addEventListener('click', e => {
-      if (e.target === modalOverlay) {
-        modalClose.click();
-      }
-    });
+hotspot.addEventListener('mousemove', e => {
+  const offsetX = 15;
+  const offsetY = 15;
+  tooltip.style.left = `${e.clientX + offsetX}px`;
+  tooltip.style.top = `${e.clientY + offsetY}px`;
+});
 
-    // Optional: close modal on ESC key
-    window.addEventListener('keydown', e => {
-      if (e.key === 'Escape' && modalOverlay.style.display === 'flex') {
-        modalClose.click();
-      }
-    });
+// Open modal on hotspot click
+hotspot.addEventListener('click', () => {
+  modalOverlay.style.display = 'flex';
+  modalOverlay.setAttribute('aria-hidden', 'false');
+});
+
+// Close modal on close button click
+modalClose.addEventListener('click', () => {
+  modalOverlay.style.display = 'none';
+  modalOverlay.setAttribute('aria-hidden', 'true');
+});
+
+// Optional: close modal when clicking outside modal content
+modalOverlay.addEventListener('click', e => {
+  if (e.target === modalOverlay) {
+    modalClose.click();
+  }
+});
+
+// Optional: close modal on ESC key
+window.addEventListener('keydown', e => {
+  if (e.key === 'Escape' && modalOverlay.style.display === 'flex') {
+    modalClose.click();
+  }
+});
+
   </script>
 
 </body>
