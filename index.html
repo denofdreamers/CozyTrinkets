@@ -1,19 +1,101 @@
-<!-- index.html -->
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>Curio Keep</title>
-  <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Cozy Trinkets - Shop</title>
+  <style>
+    /* Reset & base styles */
+    body, html {
+      margin: 0; 
+      padding: 0; 
+      height: 100%;
+      background: #f2f0eb;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    #shop-wrapper {
+      position: relative;
+      width: 1300px;
+      height: 750px;
+      margin: 40px auto;
+      background-image: url('https://raw.githubusercontent.com/denofdreamers/CozyTrinkets/refs/heads/main/assets/TrinketShopInterior_Empty.jpg');
+      background-size: cover;
+      background-position: center;
+      box-shadow: 0 0 20px rgba(0,0,0,0.1);
+      border-radius: 12px;
+      user-select: none;
+    }
+
+    /* Hotspot styling */
+    #shelf-hotspot {
+      position: absolute;
+      top: 330px;
+      left: 498px;
+      width: 515px;
+      height: 170px;
+      cursor: pointer;
+      background-color: rgba(255, 255, 255, 0);
+      transition: box-shadow 0.3s ease;
+      z-index: 10;
+      border-radius: 8px;
+    }
+
+    #shelf-hotspot:hover {
+      box-shadow: 0 0 12px 3px rgba(255, 255, 255, 0.6);
+    }
+
+    /* Tooltip styling */
+    #tooltip {
+      position: fixed;
+      pointer-events: none;
+      padding: 4px 8px;
+      background: rgba(255 255 255 / 0.9);
+      color: #555;
+      font-weight: 600;
+      border-radius: 4px;
+      font-size: 14px;
+      box-shadow: 0 0 8px rgba(255, 255, 255, 0.6);
+      opacity: 0;
+      transition: opacity 0.2s ease;
+      z-index: 1000;
+      user-select: none;
+    }
+  </style>
 </head>
 <body>
-  <div id="main-scene">
-    <img src="assets/scenes/main-room.jpg" id="main-bg">
-    <!-- Example hotspot -->
-    <div class="hotspot" data-zone="shelves" style="top: 20%; left: 60%; width: 80px; height: 80px;"></div>
+
+  <div id="shop-wrapper">
+    <div id="shelf-hotspot"></div>
   </div>
 
-  <div id="zone-view" style="display:none;"></div>
+  <div id="tooltip">shelves</div>
 
-  <script src="script.js"></script>
+  <script>
+    const hotspot = document.getElementById('shelf-hotspot');
+    const tooltip = document.getElementById('tooltip');
+
+    hotspot.addEventListener('mouseenter', () => {
+      tooltip.style.opacity = 1;
+    });
+
+    hotspot.addEventListener('mouseleave', () => {
+      tooltip.style.opacity = 0;
+    });
+
+    hotspot.addEventListener('mousemove', e => {
+      const offsetX = 15;
+      const offsetY = 15;
+      tooltip.style.left = `${e.clientX + offsetX}px`;
+      tooltip.style.top = `${e.clientY + offsetY}px`;
+    });
+
+    hotspot.addEventListener('click', () => {
+      // TODO: Replace with shelf zoom scene navigation
+      alert('Shelf hotspot clicked! (navigate to shelf.html)');
+      // Example navigation: window.location.href = 'shelf.html';
+    });
+  </script>
+
 </body>
 </html>
