@@ -2,83 +2,102 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Cozy Trinkets</title>
   <style>
     html, body {
       margin: 0;
       padding: 0;
-      background-color: black;
       height: 100%;
-      overflow: hidden;
-      display: flex;
-      justify-content: center;
-      align-items: center;
+      background-color: #000;
+      font-family: sans-serif;
     }
 
-    #container {
+    .background {
       position: relative;
-      width: 1366px;
-      height: 768px;
-      background: url("https://raw.githubusercontent.com/denofdreamers/CozyTrinkets/refs/heads/main/assets/ShopInterior_Empty.jpg") no-repeat center center;
-      background-size: cover;
-      box-shadow: 0 0 30px rgba(0, 0, 0, 0.5);
+      width: 100vw;
+      height: 100vh;
+      background-image: url("https://raw.githubusercontent.com/denofdreamers/CozyTrinkets/refs/heads/main/assets/ShopInterior_Empty.jpg");
+      background-size: contain;
+      background-position: center;
+      background-repeat: no-repeat;
+      overflow: hidden;
     }
 
     .hotspot {
       position: absolute;
-      left: 366px;
-      top: 121px;
       width: 354px;
       height: 235px;
+      left: 366px;
+      top: 121px;
       cursor: pointer;
-      background-color: rgba(255, 255, 255, 0.01); /* slight hit area */
       transition: box-shadow 0.3s ease;
     }
 
     .hotspot:hover {
-      box-shadow: 0 0 20px 10px rgba(255, 255, 255, 0.2);
-      background-color: rgba(255, 255, 255, 0.05);
+      box-shadow: 0 0 15px 5px rgba(255, 255, 200, 0.8);
+      border-radius: 10px;
     }
 
     .popup {
-      display: none;
       position: fixed;
       top: 0;
       left: 0;
       width: 100vw;
       height: 100vh;
-      background-color: rgba(0, 0, 0, 0.85);
-      justify-content: center;
+      background-color: rgba(0, 0, 0, 0.7);
+      display: none;
       align-items: center;
-      z-index: 1000;
+      justify-content: center;
+      z-index: 10;
     }
 
     .popup img {
       max-width: 90%;
       max-height: 90%;
-      box-shadow: 0 0 40px rgba(255, 255, 255, 0.3);
       border-radius: 8px;
+      box-shadow: 0 0 25px rgba(255, 255, 255, 0.6);
+    }
+
+    .close-button {
+      position: absolute;
+      top: 30px;
+      right: 30px;
+      font-size: 2rem;
+      color: white;
+      cursor: pointer;
+      z-index: 11;
     }
   </style>
 </head>
 <body>
-  <div id="container">
-    <div class="hotspot" onclick="showPopup()"></div>
+  <div class="background">
+    <div class="hotspot" id="shelfHotspot" title="View Shelf"></div>
   </div>
 
-  <div class="popup" id="popup" onclick="hidePopup()">
+  <div class="popup" id="popup">
+    <div class="close-button" id="closePopup">&times;</div>
     <img src="https://raw.githubusercontent.com/denofdreamers/CozyTrinkets/refs/heads/main/assets/ShopShelf_Empty.jpg" alt="Shelf Zoom" />
   </div>
 
   <script>
-    function showPopup() {
-      document.getElementById("popup").style.display = "flex";
-    }
+    const hotspot = document.getElementById("shelfHotspot");
+    const popup = document.getElementById("popup");
+    const closeBtn = document.getElementById("closePopup");
 
-    function hidePopup() {
-      document.getElementById("popup").style.display = "none";
-    }
+    hotspot.addEventListener("click", () => {
+      popup.style.display = "flex";
+    });
+
+    closeBtn.addEventListener("click", () => {
+      popup.style.display = "none";
+    });
+
+    popup.addEventListener("click", (e) => {
+      if (e.target === popup) {
+        popup.style.display = "none";
+      }
+    });
   </script>
 </body>
 </html>
