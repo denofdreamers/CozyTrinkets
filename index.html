@@ -1,196 +1,90 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Cozy Trinkets Shop</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=1366, initial-scale=1.0">
+  <title>Shop Scene</title>
   <style>
-    body {
-      margin: 0;
-      display: flex;
-      justify-content: center;
-      align-items: center; /* vertically center */
-      background: #f7f3ee;
-      height: 100vh;
-      overflow: hidden;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    * {
+      box-sizing: border-box;
     }
 
-    #background-container {
-      position: relative;
-      width: 90vw;
-      max-width: 1366px;
-      aspect-ratio: 1366 / 768;
-      background-image: url('https://raw.githubusercontent.com/denofdreamers/CozyTrinkets/refs/heads/main/assets/ShopInterior_Empty.jpg');
-      background-size: contain; /* show full image, no crop */
-      background-repeat: no-repeat;
-      background-position: center;
-      border-radius: 10px;
-      box-shadow: 0 6px 20px rgba(0,0,0,0.2);
-      cursor: default;
-      user-select: none;
+    body, html {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      background-color: #000;
+      overflow: hidden;
+    }
+
+    .background {
+      width: 100%;
+      height: auto;
+      display: block;
     }
 
     .hotspot {
       position: absolute;
+      left: 366px;
+      top: 121px;
+      width: 354px;
+      height: 235px;
       cursor: pointer;
-      background-color: rgba(255 255 255 / 0.05);
-      border-radius: 8px;
-      transition: box-shadow 0.3s ease, background-color 0.3s ease;
-      outline-offset: 2px;
+      /* Optional for visual debugging: background-color: rgba(255, 0, 0, 0.3); */
     }
 
-    .hotspot:hover {
-      box-shadow: 0 0 12px 4px rgba(255, 223, 150, 0.8);
-      background-color: rgba(255 255 255 / 0.15);
-    }
-
-    /* Tooltip styling */
-    #tooltip {
-      position: fixed;
-      pointer-events: none;
-      background: rgba(255 255 255 / 0.9);
-      border-radius: 5px;
-      padding: 4px 10px;
-      font-size: 14px;
-      color: #8B5E3C;
-      font-weight: 600;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-      opacity: 0;
-      transition: opacity 0.2s ease;
-      z-index: 10000;
-      user-select: none;
-      white-space: nowrap;
-    }
-
-    /* Zoomed shelf container */
-    #zoomed-shelf-container {
-      position: fixed;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      width: 80vw;
-      max-width: 700px;
-      aspect-ratio: 1366 / 768;
-      background-image: url('https://raw.githubusercontent.com/denofdreamers/CozyTrinkets/refs/heads/main/assets/ShopShelf_Empty.jpg');
-      background-size: contain;
-      background-repeat: no-repeat;
-      background-position: center;
-      border-radius: 12px;
-      box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+    .popup {
       display: none;
-      flex-direction: column;
-      padding: 20px;
-      z-index: 9999;
-      user-select: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background-color: rgba(0,0,0,0.75);
+      justify-content: center;
+      align-items: center;
+      z-index: 10;
     }
 
-    #close-shelf {
-      align-self: flex-end;
-      font-size: 28px;
-      cursor: pointer;
-      color: #8B5E3C;
-      user-select: none;
+    .popup.active {
+      display: flex;
     }
 
-    /* Placeholder for items on the shelf, example */
-    #shelf-items {
-      flex: 1;
-      margin-top: 10px;
-      background: rgba(255 255 255 / 0.8);
+    .popup img {
+      max-width: 90%;
+      max-height: 90%;
+      object-fit: contain;
+      box-shadow: 0 0 20px rgba(0,0,0,0.8);
       border-radius: 8px;
-      padding: 10px;
-      overflow-y: auto;
-      box-shadow: inset 0 0 10px rgba(0,0,0,0.1);
     }
   </style>
 </head>
 <body>
 
-  <div id="background-container" aria-label="Cozy Trinket Shop Interior" role="img" tabindex="0">
-    <div class="hotspot" data-name="Shelves" aria-label="Shelves" role="button" tabindex="0"></div>
+  <!-- Background Image -->
+  <img class="background" src="assets/ShopInterior_Empty.jpg" alt="Shop Background">
+
+  <!-- Hotspot over shelf -->
+  <div class="hotspot"></div>
+
+  <!-- Zoom Popup -->
+  <div class="popup">
+    <img src="assets/ShopShelf_Empty.jpg" alt="Shelf Zoom">
   </div>
 
-  <div id="tooltip" role="tooltip">Shelves</div>
+  <script>
+    const hotspot = document.querySelector('.hotspot');
+    const popup = document.querySelector('.popup');
 
-  <div id="zoomed-shelf-container" role="dialog" aria-modal="true" aria-labelledby="shelf-title">
-    <div id="close-shelf" role="button" aria-label="Close shelves view" tabindex="0">&times;</div>
-    <h2 id="shelf-title" style="color:#8B5E3C;">Shelves</h2>
-    <div id="shelf-items">
-      <!-- Items to drag/drop onto shelves would go here -->
-      <p style="color:#5a4a33;">(Shelf decoration coming soon!)</p>
-    </div>
-  </div>
+    hotspot.addEventListener('click', () => {
+      popup.classList.add('active');
+    });
 
-<script>
-  const backgroundContainer = document.getElementById('background-container');
-  const hotspot = backgroundContainer.querySelector('.hotspot');
-  const tooltip = document.getElementById('tooltip');
-  const zoomedShelf = document.getElementById('zoomed-shelf-container');
-  const closeShelf = document.getElementById('close-shelf');
-
-  // Base image size for scaling
-  const baseWidth = 1366;
-  const baseHeight = 768;
-
-  // Hotspot position and size in base image pixels
-  const baseHotspot = {
-    x: 366,
-    y: 121,
-    width: 354,
-    height: 235
-  };
-
-  // Update hotspot position & size based on container size
-  function updateHotspot() {
-    const rect = backgroundContainer.getBoundingClientRect();
-    const scaleX = rect.width / baseWidth;
-    const scaleY = rect.height / baseHeight;
-
-    hotspot.style.left = `${baseHotspot.x * scaleX}px`;
-    hotspot.style.top = `${baseHotspot.y * scaleY}px`;
-    hotspot.style.width = `${baseHotspot.width * scaleX}px`;
-    hotspot.style.height = `${baseHotspot.height * scaleY}px`;
-  }
-
-  window.addEventListener('resize', updateHotspot);
-  window.addEventListener('load', updateHotspot);
-
-  // Tooltip follow mouse on hotspot
-  hotspot.addEventListener('mousemove', e => {
-    tooltip.style.opacity = '1';
-    const offset = 15;
-    tooltip.style.left = `${e.clientX + offset}px`;
-    tooltip.style.top = `${e.clientY + offset}px`;
-  });
-
-  hotspot.addEventListener('mouseleave', () => {
-    tooltip.style.opacity = '0';
-  });
-
-  // Open zoomed shelf view on click or keyboard enter/space
-  function openShelf() {
-    zoomedShelf.style.display = 'flex';
-  }
-  hotspot.addEventListener('click', openShelf);
-  hotspot.addEventListener('keydown', e => {
-    if (e.key === 'Enter' || e.key === ' ') {
-      e.preventDefault();
-      openShelf();
-    }
-  });
-
-  // Close zoomed shelf on close button click or Escape key
-  closeShelf.addEventListener('click', () => {
-    zoomedShelf.style.display = 'none';
-  });
-
-  document.addEventListener('keydown', e => {
-    if (e.key === 'Escape') {
-      zoomedShelf.style.display = 'none';
-    }
-  });
-</script>
+    popup.addEventListener('click', () => {
+      popup.classList.remove('active');
+    });
+  </script>
 
 </body>
 </html>
+
