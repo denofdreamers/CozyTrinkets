@@ -2,104 +2,123 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Cozy Trinkets</title>
   <style>
     html, body {
       margin: 0;
       padding: 0;
       height: 100%;
+      overflow: hidden;
       background-color: #000;
-      font-family: sans-serif;
     }
 
-    .background {
+    #game-container {
       position: relative;
-      width: 100vw;
-      height: 100vh;
-      background-image: url("https://raw.githubusercontent.com/denofdreamers/CozyTrinkets/refs/heads/main/assets/ShopInterior_Empty.jpg");
-      background-size: contain;
+      width: 1366px;
+      height: 768px;
+      margin: auto;
+      background-image: url('https://raw.githubusercontent.com/denofdreamers/CozyTrinkets/refs/heads/main/assets/ShopInterior_Empty.jpg');
+      background-size: cover;
       background-position: center;
       background-repeat: no-repeat;
-      overflow: hidden;
+      image-rendering: pixelated;
     }
 
     .hotspot {
       position: absolute;
-      width: 354px;
-      height: 235px;
       left: 366px;
       top: 121px;
+      width: 354px;
+      height: 235px;
       cursor: pointer;
-      transition: box-shadow 0.3s ease;
+      border: 2px solid transparent;
+      box-sizing: border-box;
     }
 
     .hotspot:hover {
-      box-shadow: 0 0 15px 5px rgba(255, 255, 200, 0.8);
-      border-radius: 10px;
+      border: 2px solid rgba(255, 255, 255, 0.6);
+      box-shadow: 0 0 12px 4px rgba(255, 255, 255, 0.5);
     }
 
-    .popup {
-      position: fixed;
+    .popup-label {
+      position: absolute;
+      top: -30px;
+      left: 0;
+      padding: 4px 8px;
+      background-color: rgba(0, 0, 0, 0.7);
+      color: #fff;
+      font-family: sans-serif;
+      font-size: 14px;
+      border-radius: 4px;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+      pointer-events: none;
+    }
+
+    .hotspot:hover .popup-label {
+      opacity: 1;
+    }
+
+    #zoomed-image {
+      position: absolute;
       top: 0;
       left: 0;
-      width: 100vw;
-      height: 100vh;
-      background-color: rgba(0, 0, 0, 0.7);
+      width: 1366px;
+      height: 768px;
+      background-color: rgba(0, 0, 0, 0.9);
       display: none;
-      align-items: center;
       justify-content: center;
+      align-items: center;
       z-index: 10;
     }
 
-    .popup img {
-      max-width: 90%;
-      max-height: 90%;
-      border-radius: 8px;
-      box-shadow: 0 0 25px rgba(255, 255, 255, 0.6);
+    #zoomed-image img {
+      max-width: 100%;
+      max-height: 100%;
     }
 
-    .close-button {
+    #close-button {
       position: absolute;
-      top: 30px;
-      right: 30px;
-      font-size: 2rem;
+      top: 20px;
+      right: 20px;
+      background: rgba(0,0,0,0.6);
       color: white;
+      border: none;
+      padding: 10px 16px;
+      font-size: 16px;
       cursor: pointer;
       z-index: 11;
+    }
+
+    #close-button:hover {
+      background: rgba(255,255,255,0.2);
     }
   </style>
 </head>
 <body>
-  <div class="background">
-    <div class="hotspot" id="shelfHotspot" title="View Shelf"></div>
-  </div>
-
-  <div class="popup" id="popup">
-    <div class="close-button" id="closePopup">&times;</div>
-    <img src="https://raw.githubusercontent.com/denofdreamers/CozyTrinkets/refs/heads/main/assets/ShopShelf_Empty.jpg" alt="Shelf Zoom" />
+  <div id="game-container">
+    <div class="hotspot" id="shelf-hotspot">
+      <div class="popup-label">Shelves</div>
+    </div>
+    <div id="zoomed-image">
+      <button id="close-button">Close</button>
+      <img src="https://raw.githubusercontent.com/denofdreamers/CozyTrinkets/refs/heads/main/assets/ShopShelf_Empty.jpg" alt="Shelf Zoom" />
+    </div>
   </div>
 
   <script>
-    const hotspot = document.getElementById("shelfHotspot");
-    const popup = document.getElementById("popup");
-    const closeBtn = document.getElementById("closePopup");
+    const hotspot = document.getElementById('shelf-hotspot');
+    const zoomedImage = document.getElementById('zoomed-image');
+    const closeButton = document.getElementById('close-button');
 
-    hotspot.addEventListener("click", () => {
-      popup.style.display = "flex";
+    hotspot.addEventListener('click', () => {
+      zoomedImage.style.display = 'flex';
     });
 
-    closeBtn.addEventListener("click", () => {
-      popup.style.display = "none";
-    });
-
-    popup.addEventListener("click", (e) => {
-      if (e.target === popup) {
-        popup.style.display = "none";
-      }
+    closeButton.addEventListener('click', () => {
+      zoomedImage.style.display = 'none';
     });
   </script>
 </body>
 </html>
-
-
