@@ -1,28 +1,26 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Cozy Trinkets</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=1366, initial-scale=1.0">
+  <title>Shop Scene</title>
   <style>
-    html, body {
+    * {
+      box-sizing: border-box;
+    }
+
+    body, html {
       margin: 0;
       padding: 0;
       height: 100%;
-      overflow: hidden;
       background-color: #000;
+      overflow: hidden;
     }
 
-    #game-container {
-      position: relative;
-      width: 1366px;
-      height: 768px;
-      margin: auto;
-      background-image: url('https://raw.githubusercontent.com/denofdreamers/CozyTrinkets/refs/heads/main/assets/ShopInterior_Empty.jpg');
-      background-size: cover;
-      background-position: center;
-      background-repeat: no-repeat;
-      image-rendering: pixelated;
+    .background {
+      width: 100%;
+      height: auto;
+      display: block;
     }
 
     .hotspot {
@@ -32,93 +30,61 @@
       width: 354px;
       height: 235px;
       cursor: pointer;
-      border: 2px solid transparent;
-      box-sizing: border-box;
+      /* Optional for visual debugging: background-color: rgba(255, 0, 0, 0.3); */
     }
 
-    .hotspot:hover {
-      border: 2px solid rgba(255, 255, 255, 0.6);
-      box-shadow: 0 0 12px 4px rgba(255, 255, 255, 0.5);
-    }
-
-    .popup-label {
-      position: absolute;
-      top: -30px;
-      left: 0;
-      padding: 4px 8px;
-      background-color: rgba(0, 0, 0, 0.7);
-      color: #fff;
-      font-family: sans-serif;
-      font-size: 14px;
-      border-radius: 4px;
-      opacity: 0;
-      transition: opacity 0.3s ease;
-      pointer-events: none;
-    }
-
-    .hotspot:hover .popup-label {
-      opacity: 1;
-    }
-
-    #zoomed-image {
-      position: absolute;
+    .popup {
+      display: none;
+      position: fixed;
       top: 0;
       left: 0;
-      width: 1366px;
-      height: 768px;
-      background-color: rgba(0, 0, 0, 0.9);
-      display: none;
+      width: 100vw;
+      height: 100vh;
+      background-color: rgba(0,0,0,0.75);
       justify-content: center;
       align-items: center;
       z-index: 10;
     }
 
-    #zoomed-image img {
-      max-width: 100%;
-      max-height: 100%;
+    .popup.active {
+      display: flex;
     }
 
-    #close-button {
-      position: absolute;
-      top: 20px;
-      right: 20px;
-      background: rgba(0,0,0,0.6);
-      color: white;
-      border: none;
-      padding: 10px 16px;
-      font-size: 16px;
-      cursor: pointer;
-      z-index: 11;
-    }
-
-    #close-button:hover {
-      background: rgba(255,255,255,0.2);
+    .popup img {
+      max-width: 90%;
+      max-height: 90%;
+      object-fit: contain;
+      box-shadow: 0 0 20px rgba(0,0,0,0.8);
+      border-radius: 8px;
     }
   </style>
 </head>
 <body>
-  <div id="game-container">
-    <div class="hotspot" id="shelf-hotspot">
-      <div class="popup-label">Shelves</div>
-    </div>
-    <div id="zoomed-image">
-      <button id="close-button">Close</button>
-      <img src="https://raw.githubusercontent.com/denofdreamers/CozyTrinkets/refs/heads/main/assets/ShopShelf_Empty.jpg" alt="Shelf Zoom" />
-    </div>
+
+  <!-- Background Image -->
+  <img class="background" src="assets/ShopInterior_Empty.jpg" alt="Shop Background">
+
+  <!-- Hotspot over shelf -->
+  <div class="hotspot"></div>
+
+  <!-- Zoom Popup -->
+  <div class="popup">
+    <img src="assets/ShopShelf_Empty.jpg" alt="Shelf Zoom">
   </div>
 
   <script>
-    const hotspot = document.getElementById('shelf-hotspot');
-    const zoomedImage = document.getElementById('zoomed-image');
-    const closeButton = document.getElementById('close-button');
+    const hotspot = document.querySelector('.hotspot');
+    const popup = document.querySelector('.popup');
 
     hotspot.addEventListener('click', () => {
-      zoomedImage.style.display = 'flex';
+      popup.classList.add('active');
     });
 
-    closeButton.addEventListener('click', () => {
-      zoomedImage.style.display = 'none';
+    popup.addEventListener('click', () => {
+      popup.classList.remove('active');
     });
   </script>
+
 </body>
 </html>
+
