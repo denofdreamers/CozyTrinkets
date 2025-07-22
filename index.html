@@ -1,26 +1,24 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=1366, initial-scale=1.0">
-  <title>Shop Scene</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=1366, height=768" />
+  <title>Cozy Trinkets</title>
   <style>
-    * {
-      box-sizing: border-box;
-    }
-
-    body, html {
+    html, body {
       margin: 0;
       padding: 0;
-      height: 100%;
-      background-color: #000;
       overflow: hidden;
+      background-color: black;
     }
 
-    .background {
-      width: 100%;
-      height: auto;
-      display: block;
+    #container {
+      position: relative;
+      width: 1366px;
+      height: 768px;
+      margin: 0 auto;
+      background: url("https://raw.githubusercontent.com/denofdreamers/CozyTrinkets/refs/heads/main/assets/ShopInterior_Empty.jpg") no-repeat center center;
+      background-size: cover;
     }
 
     .hotspot {
@@ -30,7 +28,7 @@
       width: 354px;
       height: 235px;
       cursor: pointer;
-      /* Optional for visual debugging: background-color: rgba(255, 0, 0, 0.3); */
+      background-color: rgba(255, 255, 255, 0.0); /* invisible but clickable */
     }
 
     .popup {
@@ -40,51 +38,38 @@
       left: 0;
       width: 100vw;
       height: 100vh;
-      background-color: rgba(0,0,0,0.75);
+      background-color: rgba(0, 0, 0, 0.85);
       justify-content: center;
       align-items: center;
-      z-index: 10;
-    }
-
-    .popup.active {
-      display: flex;
+      z-index: 1000;
     }
 
     .popup img {
       max-width: 90%;
       max-height: 90%;
-      object-fit: contain;
-      box-shadow: 0 0 20px rgba(0,0,0,0.8);
+      box-shadow: 0 0 40px rgba(255, 255, 255, 0.3);
       border-radius: 8px;
     }
   </style>
 </head>
 <body>
+  <div id="container">
+    <div class="hotspot" onclick="showPopup()"></div>
+  </div>
 
-  <!-- Background Image -->
-  <img class="background" src="assets/ShopInterior_Empty.jpg" alt="Shop Background">
-
-  <!-- Hotspot over shelf -->
-  <div class="hotspot"></div>
-
-  <!-- Zoom Popup -->
-  <div class="popup">
-    <img src="assets/ShopShelf_Empty.jpg" alt="Shelf Zoom">
+  <div class="popup" id="popup" onclick="hidePopup()">
+    <img src="https://raw.githubusercontent.com/denofdreamers/CozyTrinkets/refs/heads/main/assets/ShopShelf_Empty.jpg" alt="Shelf Zoom" />
   </div>
 
   <script>
-    const hotspot = document.querySelector('.hotspot');
-    const popup = document.querySelector('.popup');
+    function showPopup() {
+      document.getElementById("popup").style.display = "flex";
+    }
 
-    hotspot.addEventListener('click', () => {
-      popup.classList.add('active');
-    });
-
-    popup.addEventListener('click', () => {
-      popup.classList.remove('active');
-    });
+    function hidePopup() {
+      document.getElementById("popup").style.display = "none";
+    }
   </script>
-
 </body>
 </html>
 
